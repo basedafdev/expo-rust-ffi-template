@@ -21,6 +21,29 @@ function replaceInFile(filePath, search, replace) {
   fs.writeFileSync(filePath, newContent);
 }
 
+// Function to modify Podfile
+function modifyPodfile(podfilePath) {
+  if (!fs.existsSync(podfilePath)) {
+    console.log(`Podfile not found: ${podfilePath}`);
+    return;
+  }
+
+  const content = fs.readFileSync(podfilePath, 'utf8');
+  const targetLine = `target '${appName.toLowerCase()}' do`;
+  const rustFFIPod = '  # Add RustFFI pod\n  pod \'RustFFI\', :path => \'../modules/rust_ffi/ios\'\n';
+  
+  if (content.includes(targetLine)) {
+    const newContent = content.replace(
+      `${targetLine}\n  use_expo_modules!`,
+      `${targetLine}\n  use_expo_modules!\n\n${rustFFIPod}`
+    );
+    fs.writeFileSync(podfilePath, newContent);
+    console.log('Added RustFFI pod to Podfile');
+  } else {
+    console.log('Could not find target line in Podfile');
+  }
+}
+
 // Function to rename directory
 function renameDirectory(oldPath, newPath) {
   if (fs.existsSync(oldPath)) {
@@ -71,11 +94,6 @@ const filesToUpdate = [
     path: 'android/app/src/main/java/com/anonymous/hedgepayexpoapp/MainApplication.kt',
     search: 'com.anonymous.hedgepayexpoapp',
     replace: `com.anonymous.${appName.toLowerCase()}`
-  },
-  {
-    path: 'ios/Podfile',
-    search: "target 'hedgepayexpoapp'",
-    replace: `target '${appName.toLowerCase()}'`
   }
 ];
 
@@ -120,5 +138,9 @@ if (fs.existsSync(androidPackagePath)) {
   const newPackagePath = path.join(androidPackagePath, appName.toLowerCase());
   renameDirectory(oldPackagePath, newPackagePath);
 }
+
+// Modify Podfile to include RustFFI pod
+const podfilePath = path.join('ios', 'Podfile');
+modifyPodfile(podfilePath);
 
 console.log('Template setup complete!'); 
