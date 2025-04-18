@@ -12,9 +12,37 @@ if (!appName) {
 
 // Function to replace text in a file
 function replaceInFile(filePath, search, replace) {
+  if (!fs.existsSync(filePath)) {
+    console.log(`File not found: ${filePath}`);
+    return;
+  }
   const content = fs.readFileSync(filePath, 'utf8');
   const newContent = content.replace(new RegExp(search, 'g'), replace);
   fs.writeFileSync(filePath, newContent);
+}
+
+// Function to rename directory
+function renameDirectory(oldPath, newPath) {
+  if (fs.existsSync(oldPath)) {
+    fs.renameSync(oldPath, newPath);
+  }
+}
+
+// Function to process all files in a directory recursively
+function processDirectory(dirPath, callback) {
+  if (!fs.existsSync(dirPath)) return;
+  
+  const files = fs.readdirSync(dirPath);
+  for (const file of files) {
+    const filePath = path.join(dirPath, file);
+    const stat = fs.statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      processDirectory(filePath, callback);
+    } else {
+      callback(filePath);
+    }
+  }
 }
 
 // Replace package names and identifiers
@@ -43,29 +71,54 @@ const filesToUpdate = [
     path: 'android/app/src/main/java/com/anonymous/hedgepayexpoapp/MainApplication.kt',
     search: 'com.anonymous.hedgepayexpoapp',
     replace: `com.anonymous.${appName.toLowerCase()}`
+  },
+  {
+    path: 'ios/Podfile',
+    search: "target 'hedgepayexpoapp'",
+    replace: `target '${appName.toLowerCase()}'`
   }
 ];
 
 // Update all files
 filesToUpdate.forEach(({ path: filePath, search, replace }) => {
-  if (fs.existsSync(filePath)) {
-    replaceInFile(filePath, search, replace);
-  }
+  replaceInFile(filePath, search, replace);
 });
 
-// Rename iOS project files
+// Process iOS project files
 const iosFiles = [
   'hedgepayexpoapp.xcodeproj',
   'hedgepayexpoapp.xcworkspace',
   'hedgepayexpoapp'
 ];
 
+// Rename iOS directories and files
 iosFiles.forEach(file => {
   const oldPath = path.join('ios', file);
   const newPath = path.join('ios', file.replace('hedgepayexpoapp', appName.toLowerCase()));
-  if (fs.existsSync(oldPath)) {
-    fs.renameSync(oldPath, newPath);
+  renameDirectory(oldPath, newPath);
+});
+
+// Process all files in the ios directory to replace references
+processDirectory('ios', (filePath) => {
+  if (filePath.includes('hedgepayexpoapp')) {
+    const newPath = filePath.replace('hedgepayexpoapp', appName.toLowerCase());
+    renameDirectory(filePath, newPath);
+  } else {
+    replaceInFile(filePath, 'hedgepayexpoapp', appName.toLowerCase());
   }
 });
+
+// Process all files in the android directory to replace references
+processDirectory('android', (filePath) => {
+  replaceInFile(filePath, 'hedgepayexpoapp', appName.toLowerCase());
+});
+
+// Rename Android package directories
+const androidPackagePath = path.join('android', 'app', 'src', 'main', 'java', 'com', 'anonymous');
+if (fs.existsSync(androidPackagePath)) {
+  const oldPackagePath = path.join(androidPackagePath, 'hedgepayexpoapp');
+  const newPackagePath = path.join(androidPackagePath, appName.toLowerCase());
+  renameDirectory(oldPackagePath, newPackagePath);
+}
 
 console.log('Template setup complete!'); 
