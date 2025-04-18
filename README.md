@@ -8,7 +8,7 @@ A template for building React Native applications with Expo that integrate nativ
 - 📱 Expo managed workflow
 - 🔄 Hot reloading support
 - 🛠 Pre-configured build scripts
-- 📚 Example module included
+- 📚 Example arithmetic module included
 - 🎯 TypeScript support
 
 ## Prerequisites
@@ -55,12 +55,12 @@ my-app/
 ├── modules/
 │   └── rust_ffi/           # Shared Rust FFI implementation
 │       ├── ios/            # iOS FFI bindings and libraries
-│       │   └── hello_world/
+│       │   └── arithmetic/
 │       └── android/        # Android FFI bindings and libraries
-│           └── hello_world/
+│           └── arithmetic/
 ├── rust_core/              # Rust implementation
 │   ├── modules/            # Individual Rust modules
-│   │   └── hello_world/    # Example module
+│   │   └── arithmetic/     # Example arithmetic module
 │   ├── uniffi-bindgen/     # UniFFI bindings generator
 │   ├── generated/          # Generated bindings
 │   └── Cargo.toml         # Workspace configuration
@@ -88,7 +88,7 @@ my-app/
    ```toml
    [workspace]
    members = [
-     "modules/hello_world",
+     "modules/arithmetic",
      "modules/my_module",
      "uniffi-bindgen"
    ]
@@ -98,8 +98,8 @@ my-app/
    ```rust
    // rust_core/modules/my_module/src/lib.rs
    #[uniffi::export]
-   pub fn my_function() -> String {
-       "Hello from Rust!".to_string()
+   pub fn add(a: i32, b: i32) -> i32 {
+       a + b
    }
    ```
 
@@ -114,8 +114,8 @@ my-app/
 ```typescript
 import { NativeModules } from 'react-native';
 
-const { MyModule } = NativeModules;
-const message = await MyModule.myFunction();
+const { Arithmetic } = NativeModules;
+const result = await Arithmetic.add(5, 3); // Returns 8
 ```
 
 ## Best Practices

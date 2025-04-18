@@ -1,7 +1,6 @@
 {
-  "name": "hedgepay-expo-app",
-  "version": "0.1.0",
-  "description": "A template for creating Expo apps with Rust FFI support",
+  "name": "expo-rust-ffi-template",
+  "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
@@ -36,7 +35,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.1.0"
   },
-  "private": true,
   "template": {
     "name": "expo-rust-ffi-template",
     "description": "A template for creating Expo apps with Rust FFI support",
