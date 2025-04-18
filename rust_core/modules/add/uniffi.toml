@@ -1,0 +1,7 @@
+[bindings.kotlin]
+package_name = "org.expo.ffi.add"
+
+[bindings.swift]
+package_name = "FFIAdd"
+
+

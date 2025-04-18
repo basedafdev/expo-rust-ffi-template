@@ -1,0 +1,53 @@
+{
+  "name": "hedgepay-expo-app",
+  "version": "0.1.0",
+  "description": "A template for creating Expo apps with Rust FFI support",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "build:ios": "./scripts/build_ios.sh",
+    "build:android": "./scripts/build_android.sh",
+    "clean": "rm -rf .expo && rm -rf node_modules && rm -rf package-lock.json && cd rust_core && cargo clean"
+  },
+  "dependencies": {
+    "expo": "~52.0.43",
+    "expo-status-bar": "~2.0.1",
+    "nativewind": "^4.1.23",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-reanimated": "^3.17.3",
+    "react-native-safe-area-context": "^5.3.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "@types/react-native": "^0.72.8",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "eslint-config-universe": "^12.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "prettier": "^3.2.5",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.1.0"
+  },
+  "private": true,
+  "template": {
+    "name": "expo-rust-ffi-template",
+    "description": "A template for creating Expo apps with Rust FFI support",
+    "version": "0.1.0",
+    "slug": "expo-rust-ffi-template",
+    "scheme": "exporustffi",
+    "ios": {
+      "bundleIdentifier": "com.anonymous.exporustffi"
+    },
+    "android": {
+      "package": "com.anonymous.exporustffi"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+[workspace]
+members = [
+  "modules/add",
+  "modules/subtract",
+  "uniffi-bindgen"
+]
+
+resolver = "2"
+
+[workspace.dependencies]
+uniffi = { version = "0.29" }
